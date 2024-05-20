@@ -8,7 +8,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { numberReducer } from "./Contacts/contactsSlice";
+import { numberReducer } from "./contactsSlice";
 import { filterReducer } from "./filtersSlice";
 
 export const store = configureStore({
