@@ -1,9 +1,7 @@
-.searchBar {
-  width: 290px;
-  margin-top: 20px;
+.search-p {
+  margin-bottom: 8px;
 }
-.searchInput {
-  padding: 10px;
-  width: 290px;
-  border-radius: 10px;
+.search-input {
+  border-radius: 5px;
+  padding: 5px;
 }

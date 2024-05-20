@@ -1,12 +1,7 @@
-.list {
-  margin-top: 50px;
+.contacts-list {
   display: flex;
+  gap: 10px;
   flex-wrap: wrap;
-  gap: 20px;
-}
-.listItem {
-  display: flex;
-  padding: 10px;
-  width: 330px;
-  border: 2px solid black;
+  width: calc(290px * 3 + 10px * 2);
+  margin-top: 30px;
 }

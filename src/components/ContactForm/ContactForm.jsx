@@ -1,89 +1,71 @@
-import css from "./ContactForm.module.css";
-
-import { nanoid } from "nanoid";
-
-import { Field, Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
-import { useId } from "react";
+import { nanoid } from "nanoid";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import css from "./ContactForm.module.css";
 import { useDispatch } from "react-redux";
-import { fetchAddContact } from "../../redux/contactsOps";
-
-const userSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("Name is required")
-    .min(3, "Minimum 3 characters")
-    .max(50, "Maximum 50 characters"),
-  number: Yup.string()
-    .required("Number is required")
-    .min(3, "Minimum 3 characters")
-    .max(50, "Maximum 50 characters")
-    .matches(/^\+?[0-9\s-]+$/, "Invalid phone number"),
-});
+import { addContact } from "../../redux/contactsOps.js";
 
 const initialValues = {
-  name: "",
+  user: "",
   number: "",
 };
+const addContactSchema = Yup.object().shape({
+  user: Yup.string()
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+  number: Yup.string()
+    .matches(/^[0-9+-]*$/, "Invalid number format")
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+});
 
-const ConctactForm = () => {
-  const idName = useId();
-  const idNumber = useId();
+const ContactForm = () => {
   const dispatch = useDispatch();
+  const userFieldId = nanoid();
+  const numberFieldId = nanoid();
 
-  const onSubmit = (values, actions) => {
-    const newContact = {
-      id: nanoid(),
-      name: values.name
-        .trim()
-        .split(" ")
-        .map((value) =>
-          value[1]
-            ? value[0].toUpperCase() + value.slice(1).toLowerCase()
-            : value.toUpperCase()
-        )
-        .join(" "),
-      number: values.number,
-    };
-
-    dispatch(fetchAddContact(newContact));
+  const handleSubmit = (values, actions) => {
+    dispatch(addContact({ name: values.user, number: values.number }));
     actions.resetForm();
   };
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={userSchema}
+      onSubmit={handleSubmit}
+      validationSchema={addContactSchema}
     >
-      <Form className={css.form}>
-        <div className={css.formGroup}>
-          <label htmlFor={idName}>Name</label>
-          <Field
-            type="text"
-            name="name"
-            id={idName}
-            className={css.formFiled}
-          />
-          <ErrorMessage name="name" component="span" className={css.error} />
-        </div>
-        <div className={css.formGroup}>
-          <label htmlFor={idNumber}>Number</label>
-          <Field
-            type="text"
-            name="number"
-            id={idNumber}
-            className={css.formFiled}
-          />
-          <ErrorMessage name="number" component="span" className={css.error} />
-        </div>
+      <Form className={css["form"]}>
+        <label className={css["label"]} htmlFor={userFieldId}>
+          User
+        </label>
+        <Field
+          className={css["form-field"]}
+          type="text"
+          name="user"
+          id={userFieldId}
+        ></Field>
+        <ErrorMessage className={css.error} name="user" as="span" />
 
-        <div className={css.formBtn}>
-          <button className={css.btn} type="submit">
-            Add Contact
-          </button>
-        </div>
+        <label className={css["label"]} htmlFor={numberFieldId}>
+          Number
+        </label>
+        <Field
+          className={css["form-field"]}
+          type="text"
+          pattern="[0-9+\-]*"
+          name="number"
+          id={numberFieldId}
+        ></Field>
+        <ErrorMessage className={css.error} name="number" as="span" />
+
+        <button className={css["add-button"]} type="submit">
+          Add contact
+        </button>
       </Form>
     </Formik>
   );
 };
-export default ConctactForm;
+export default ContactForm;
