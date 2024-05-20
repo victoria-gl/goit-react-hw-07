@@ -7,7 +7,7 @@ import * as Yup from "yup";
 
 import { useId } from "react";
 import { useDispatch } from "react-redux";
-import { fetchAddContact } from "../../redux/Contacts/operationContacts";
+import { fetchAddContact } from "../../redux/contactsOps";
 
 const userSchema = Yup.object().shape({
   name: Yup.string()
